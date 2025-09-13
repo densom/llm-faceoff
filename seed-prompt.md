@@ -14,3 +14,8 @@ Your job is to create markdown files that explain how you will go about executin
  - The output should only be markdown files
  - The markdown files belong in a subfolder inside of the ./planning directory
  - I will provide you with the name of the subfolder to use as part of the prompt.
+
+### Constraints
+
+- The solution will be written in Python
+- To start, only Microsoft Copilot and Claude will be used, but flexibility to plug in other technologies/models would be nice to have.
