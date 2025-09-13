@@ -3,6 +3,9 @@
 ## Overview
 This document outlines the plan for developing a program that enables different Large Language Models (LLMs) to debate with each other. The project will be executed in two main phases: Planning and Execution.
 
+## Model Used in This Session
+- **Assistant Model:** GitHub Copilot (powered by GPT-4.1)
+
 ## Goals
 - Design a system where multiple LLMs can participate in structured debates.
 - Ensure debates are reproducible and results are easy to analyze.
