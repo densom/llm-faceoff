@@ -4,6 +4,8 @@
 
 This document outlines the architectural design for an LLM debate system that enables different Large Language Models to engage in structured debates on various topics.
 
+*Planning created using Claude Sonnet 4 (claude-sonnet-4-20250514)*
+
 ## Core Components
 
 ### 1. Debate Controller
