@@ -3,10 +3,11 @@
 ## Step 1: Set Up Project Structure
 - Initialize code repository and directory layout.
 - Set up basic configuration files.
+- Ensure Python environment is managed with the `uv` tool (not pip); `uv init` has already been run.
 
 ## Step 2: Implement Core Components
 - Debate Orchestrator
-- LLM Adapter Interface (with at least two LLMs)
+- LLM Adapter Interface (with at least two LLMs: Copilot and Claude)
 - Debate Logger
 - Configuration Manager
 
