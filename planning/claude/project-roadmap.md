@@ -24,8 +24,8 @@ Create an experimental platform that enables different Large Language Models to 
 **Goal**: Establish solid project foundation
 
 **Deliverables**:
-- Project setup with TypeScript, testing, and tooling
-- Core type definitions and interfaces
+- Project setup with Python, uv, testing, and tooling
+- Core type definitions using dataclasses and protocols
 - Basic development workflow and CI/CD pipeline
 - Initial documentation structure
 
@@ -123,11 +123,13 @@ Create an experimental platform that enables different Large Language Models to 
 ### Development Resources
 - Single developer for core implementation
 - Access to multiple LLM APIs (OpenAI, Anthropic, Google)
+- Python development environment with uv package management
 - Development machine capable of running local models
 - Time allocation: ~15-20 hours per week
 
 ### External Dependencies
-- LLM API access and credits
+- LLM API access and credits (OpenAI, Anthropic)
+- Python development environment with uv
 - Potential access to academic papers for debate format research
 - Beta testers for validation and feedback
 

@@ -6,15 +6,15 @@
 **Duration: 1-2 weeks**
 
 #### Project Infrastructure
-- Initialize Node.js/TypeScript project with proper tooling
-- Set up development environment (ESLint, Prettier, Jest)
-- Configure build system and package management
-- Establish project structure and coding standards
+- Initialize Python project using uv (already completed)
+- Set up development environment (ruff, black, pytest)
+- Configure virtual environment and dependency management with uv
+- Establish project structure and Python coding standards
 
 #### Core Interfaces
-- Define TypeScript interfaces for:
+- Define Python protocols and data classes for:
   - LLM Provider abstraction
-  - Debate configuration schema
+  - Debate configuration schema (using pydantic)
   - Message and response formats
   - Debate state management
 
@@ -82,47 +82,48 @@
 
 ### Core Technology Stack
 ```
-Runtime: Node.js 18+ with TypeScript
-Testing: Jest with coverage reporting
-Linting: ESLint with TypeScript rules
-Formatting: Prettier
-Build: TSC or esbuild for production
+Runtime: Python 3.11+
+Dependency Management: uv
+Testing: pytest with coverage reporting
+Linting: ruff for fast linting
+Formatting: black for code formatting
+Type Checking: mypy for static type analysis
 ```
 
 ### Project Structure
 ```
 src/
 ├── core/
-│   ├── debate-controller.ts
-│   ├── message-processor.ts
+│   ├── debate_controller.py
+│   ├── message_processor.py
 │   └── types/
 ├── providers/
-│   ├── base-provider.ts
-│   ├── openai-provider.ts
-│   ├── anthropic-provider.ts
-│   └── provider-factory.ts
+│   ├── base_provider.py
+│   ├── openai_provider.py
+│   ├── anthropic_provider.py
+│   └── provider_factory.py
 ├── rules/
-│   ├── debate-rules.ts
+│   ├── debate_rules.py
 │   ├── formats/
 │   └── validators/
 ├── output/
-│   ├── transcript-generator.ts
-│   ├── analysis-engine.ts
+│   ├── transcript_generator.py
+│   ├── analysis_engine.py
 │   └── exporters/
 ├── config/
-│   ├── debate-configs/
-│   └── provider-configs/
+│   ├── debate_configs/
+│   └── provider_configs/
 └── utils/
-    ├── logger.ts
-    ├── rate-limiter.ts
-    └── error-handling.ts
+    ├── logger.py
+    ├── rate_limiter.py
+    └── error_handling.py
 ```
 
 ### Configuration Management
 - YAML files for debate format definitions
-- JSON schemas for configuration validation
-- Environment variable management for API keys
-- Runtime configuration hot-reloading
+- Pydantic models for configuration validation
+- Environment variable management for API keys (.env files)
+- Runtime configuration hot-reloading using Python modules
 
 ### Error Handling Strategy
 - Graceful degradation for API failures

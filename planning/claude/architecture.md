@@ -77,9 +77,10 @@ Comprehensive logging and monitoring of all debate interactions
 ## Technology Considerations
 
 ### Language and Runtime
-- Consider Node.js/TypeScript for async API handling
-- Python alternative for ML/AI library ecosystem
-- Rust for performance-critical components
+- **Python** as the primary development language (per project constraints)
+- **uv** for dependency management instead of pip
+- Async/await capabilities for handling concurrent API calls
+- Rich ecosystem of AI/ML libraries (anthropic, openai, asyncio)
 
 ### Storage
 - JSON files for configuration and simple data
@@ -88,7 +89,8 @@ Comprehensive logging and monitoring of all debate interactions
 
 ### Configuration Management
 - YAML/JSON configuration files for debate rules
-- Environment variables for API keys and settings
+- Environment variables for API keys and settings (.env files)
+- Python configuration modules for type-safe settings
 - Runtime configuration for dynamic rule adjustments
 
 ## Integration Points
