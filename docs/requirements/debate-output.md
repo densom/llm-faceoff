@@ -212,6 +212,15 @@ The JSON output **MUST** include these top-level fields:
 - **MUST** use appropriate file extensions (.md, .json, .html)
 - **MUST** ensure cross-platform compatibility
 
+### File Naming Convention
+- **MUST** follow the pattern: `debate_{timestamp}_{topic_slug}.{extension}`
+  - `{timestamp}`: Session creation time in format `YYYYMMDD_HHMMSS`
+  - `{topic_slug}`: Sanitized debate topic (alphanumeric characters only, others replaced with underscores)
+  - `{extension}`: Format-specific extension (md, json, html)
+- **MUST** limit topic slug to first 50 characters of the debate topic
+- **MUST** sanitize topic by replacing non-alphanumeric characters with underscores
+- **MUST** use consistent naming across all output formats for the same session
+
 ### Markdown Compatibility
 - **MUST** generate CommonMark compliant markdown
 - **SHOULD** be compatible with popular markdown renderers
