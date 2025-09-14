@@ -1,4 +1,6 @@
 import os
+import datetime
+import re
 from llm_faceoff.llms.openai_adapter import OpenAIAdapter
 from llm_faceoff.llms.claude_adapter import ClaudeAdapter
 from llm_faceoff.debate.orchestrator import DebateOrchestrator
@@ -25,7 +27,16 @@ def main():
     # The output format follows the requirements specified in docs/requirements/debate-output.md
     output_dir = os.path.join(os.getcwd(), 'outputs')
     os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(output_dir, 'debate_transcript.md')
+
+    # Generate timestamp in YYYYMMDD_HHMMSS format
+    timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+
+    # Sanitize topic to create topic_slug: alphanumeric only, others replaced with underscores, limit to 50 chars
+    topic_slug = re.sub(r'[^a-zA-Z0-9]', '_', topic)[:50]
+
+    # Construct output file name
+    output_filename = f'debate_{timestamp}_{topic_slug}.md'
+    output_path = os.path.join(output_dir, output_filename)
 
     markdown_output = orchestrator.get_formatted_output('markdown')
     with open(output_path, 'w', encoding='utf-8') as f:
