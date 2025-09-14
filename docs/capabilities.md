@@ -170,8 +170,8 @@ This document outlines the current capabilities of the LLM Debate System, showin
 
 ## Advanced Features (Future Enhancements)
 
-- [ ] **Misc**
-  - [ ] Clean output - the debate output should produce well organized markdown so that it can more easily interpreted.
+- [x] **Misc**
+  - [x] Clean output - the debate output should produce well organized markdown so that it can more easily interpreted.
 
 - [ ] **Advanced Analytics**
   - [ ] Sentiment analysis

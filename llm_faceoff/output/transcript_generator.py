@@ -11,43 +11,87 @@ class BasicTranscriptGenerator:
     """Basic implementation of transcript generator."""
 
     def generate_markdown(self, session: DebateSession) -> str:
-        """Generate a markdown transcript."""
+        """Generate a well-organized markdown transcript."""
         lines = []
 
-        lines.append(f"# Debate Transcript: {session.config.topic}")
-        lines.append(f"**Format:** {session.config.format}")
-        lines.append(f"**Started:** {session.started_at.strftime('%Y-%m-%d %H:%M:%S') if session.started_at else 'N/A'}")
-        lines.append(f"**Status:** {session.status.value}")
+        # Header with clean title and key metadata
+        lines.append(f"# 🎯 {session.config.topic}")
+        lines.append("")
+        lines.append("## 📋 Debate Information")
+        lines.append("")
+        lines.append(f"| Field | Value |")
+        lines.append(f"|-------|-------|")
+        lines.append(f"| **Format** | {session.config.format.title()} |")
+        lines.append(f"| **Status** | {session.status.value.title().replace('_', ' ')} |")
+        lines.append(f"| **Started** | {session.started_at.strftime('%Y-%m-%d at %H:%M:%S') if session.started_at else 'Not started'} |")
+        if session.completed_at:
+            lines.append(f"| **Completed** | {session.completed_at.strftime('%Y-%m-%d at %H:%M:%S')} |")
+        lines.append(f"| **Max Turns** | {session.config.max_turns} |")
+        lines.append(f"| **Turn Limit** | {session.config.max_response_length} characters |")
         lines.append("")
 
-        lines.append("## Participants")
-        for i, participant in enumerate(session.participants, 1):
+        # Participants with role-specific formatting
+        lines.append("## 👥 Participants")
+        lines.append("")
+
+        for participant in session.participants:
             role_display = participant.role.value.replace('_', ' ').title()
-            lines.append(f"{i}. **{participant.name or 'Unnamed'}** ({participant.provider} {participant.model}) - {role_display}")
+            role_emoji = self._get_role_emoji(participant.role)
+            participant_name = participant.name or f"{participant.provider.title()}-{participant.model}"
+
+            lines.append(f"### {role_emoji} {participant_name}")
+            lines.append(f"- **Role:** {role_display}")
+            lines.append(f"- **Provider:** {participant.provider.title()}")
+            lines.append(f"- **Model:** {participant.model}")
+            lines.append("")
+
+        # Rules if any
+        if session.config.rules:
+            lines.append("## 📜 Debate Rules")
+            lines.append("")
+            for rule_key, rule_value in session.config.rules.items():
+                lines.append(f"- **{rule_key.replace('_', ' ').title()}:** {rule_value}")
+            lines.append("")
+
+        # Main transcript with improved formatting
+        lines.append("## 💬 Debate Transcript")
         lines.append("")
 
-        lines.append("## Debate Transcript")
-        lines.append("")
-
-        for i, message in enumerate(session.messages, 1):
-            participant = self._get_participant_by_id(session, message.participant_id)
-            participant_name = participant.name if participant else "System"
-            provider_info = f"({participant.provider} {participant.model})" if participant else ""
-
-            message_type = message.message_type.value.replace('_', ' ').title()
-            timestamp = message.timestamp.strftime('%H:%M:%S')
-
-            lines.append(f"### Turn {i} - {participant_name} {provider_info}")
-            lines.append(f"**Type:** {message_type} | **Time:** {timestamp}")
+        if not session.messages:
+            lines.append("*No messages yet - debate has not begun.*")
             lines.append("")
-            lines.append(message.content)
-            lines.append("")
-            lines.append("---")
-            lines.append("")
+        else:
+            for i, message in enumerate(session.messages, 1):
+                participant = self._get_participant_by_id(session, message.participant_id)
+                participant_name = participant.name if participant else "System"
+                if not participant_name or participant_name == "Unnamed":
+                    participant_name = f"{participant.provider.title()}-{participant.model}" if participant else "System"
 
-        self._add_session_summary(lines, session)
+                message_type = message.message_type.value.replace('_', ' ').title()
+                timestamp = message.timestamp.strftime('%H:%M:%S')
 
-        return "\\n".join(lines)
+                # Role-specific formatting
+                role_emoji = self._get_role_emoji(participant.role) if participant else "🤖"
+
+                lines.append(f"### Turn {i}: {role_emoji} {participant_name}")
+                lines.append("")
+                lines.append(f"**{message_type}** • ⏰ {timestamp}")
+                lines.append("")
+
+                # Format the message content with proper line breaks and structure
+                formatted_content = self._format_message_content(message.content)
+                lines.append(formatted_content)
+                lines.append("")
+
+                # Add separator between messages (except for the last one)
+                if i < len(session.messages):
+                    lines.append("---")
+                    lines.append("")
+
+        # Summary with enhanced statistics
+        self._add_enhanced_session_summary(lines, session)
+
+        return "\n".join(lines)
 
     def generate_json(self, session: DebateSession) -> Dict[str, Any]:
         """Generate a JSON transcript."""
@@ -168,22 +212,106 @@ class BasicTranscriptGenerator:
                 return participant
         return None
 
-    def _add_session_summary(self, lines: list[str], session: DebateSession) -> None:
-        """Add session summary to markdown."""
+    def _get_role_emoji(self, role: Any) -> str:
+        """Get emoji for participant role."""
+        if hasattr(role, 'value'):
+            role_value = role.value
+        else:
+            role_value = str(role).lower()
+
+        role_emojis = {
+            'proposition': '✅',
+            'opposition': '❌',
+            'moderator': '⚖️'
+        }
+        return role_emojis.get(role_value, '🎭')
+
+    def _format_message_content(self, content: str) -> str:
+        """Format message content for better readability."""
+        if not content:
+            return "*[No content]*"
+
+        # Clean up the content
+        formatted = content.strip()
+
+        # Add proper paragraph breaks for very long content
+        if len(formatted) > 500:
+            # Split on double newlines and rejoin with proper markdown spacing
+            paragraphs = [p.strip() for p in formatted.split('\n\n') if p.strip()]
+            if len(paragraphs) > 1:
+                formatted = '\n\n'.join(paragraphs)
+
+        # Ensure content ends cleanly
+        if not formatted.endswith('.') and not formatted.endswith('!') and not formatted.endswith('?'):
+            formatted = formatted.rstrip() + '.'
+
+        return formatted
+
+    def _add_enhanced_session_summary(self, lines: list[str], session: DebateSession) -> None:
+        """Add enhanced session summary to markdown."""
         stats = self._generate_statistics(session)
 
-        lines.append("## Session Summary")
-        lines.append("")
-        lines.append(f"- **Total Messages:** {stats['total_messages']}")
-        lines.append(f"- **Duration:** {stats['duration_minutes']:.1f} minutes")
-        lines.append(f"- **Average Message Length:** {stats['avg_message_length']:.0f} characters")
+        lines.append("## 📊 Session Summary")
         lines.append("")
 
-        if stats['participant_stats']:
-            lines.append("### Participant Statistics")
-            for participant_name, pstats in stats['participant_stats'].items():
-                lines.append(f"- **{participant_name}:** {pstats['message_count']} messages, {pstats['total_chars']} characters")
+        # Overview statistics table
+        lines.append("### Overview")
         lines.append("")
+        lines.append("| Metric | Value |")
+        lines.append("|--------|-------|")
+        lines.append(f"| **Total Messages** | {stats['total_messages']} |")
+        lines.append(f"| **Total Participants** | {stats['total_participants']} |")
+        lines.append(f"| **Duration** | {stats['duration_minutes']:.1f} minutes |")
+        lines.append(f"| **Avg Message Length** | {stats['avg_message_length']:.0f} characters |")
+        lines.append("")
+
+        # Participant statistics
+        if stats['participant_stats']:
+            lines.append("### 👤 Participant Performance")
+            lines.append("")
+
+            for participant_name, pstats in stats['participant_stats'].items():
+                # Find the participant to get their role
+                participant_role = None
+                for p in session.participants:
+                    p_name = p.name or f"{p.provider.title()}-{p.model}"
+                    if p_name == participant_name:
+                        participant_role = p.role
+                        break
+
+                role_emoji = self._get_role_emoji(participant_role) if participant_role else "🎭"
+
+                lines.append(f"#### {role_emoji} {participant_name}")
+                lines.append("")
+                lines.append("| Metric | Value |")
+                lines.append("|--------|-------|")
+                lines.append(f"| **Messages** | {pstats['message_count']} |")
+                lines.append(f"| **Total Characters** | {pstats['total_chars']:,} |")
+                lines.append(f"| **Avg Characters** | {pstats['avg_chars']:.0f} |")
+                lines.append("")
+
+        # Completion status
+        if session.status.value == 'completed':
+            lines.append("### ✅ Debate Complete")
+            lines.append("")
+            lines.append("This debate has concluded successfully.")
+        elif session.status.value == 'in_progress':
+            lines.append("### ⏳ Debate In Progress")
+            lines.append("")
+            lines.append(f"Current turn: {session.current_turn + 1}")
+        elif session.status.value == 'aborted':
+            lines.append("### ❌ Debate Aborted")
+            lines.append("")
+            lines.append("This debate was terminated before completion.")
+
+        lines.append("")
+        lines.append("---")
+        lines.append("")
+        lines.append(f"*Generated on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}*")
+
+    def _add_session_summary(self, lines: list[str], session: DebateSession) -> None:
+        """Add session summary to markdown (legacy method for compatibility)."""
+        self._add_enhanced_session_summary(lines, session)
 
     def _generate_statistics(self, session: DebateSession) -> Dict[str, Any]:
         """Generate session statistics."""

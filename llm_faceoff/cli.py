@@ -250,7 +250,7 @@ class DebateCLI:
         if saved_files:
             self.console.print(f"\\n[green]Transcripts saved:[/green]")
             for file_path in saved_files:
-                self.console.print(f"  📄 {file_path}")
+                self.console.print(f"  {file_path}")
             return saved_files[0]
 
         return None
