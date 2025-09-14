@@ -24,3 +24,5 @@ Your job is to create markdown files that explain how you will go about executin
 
 - The "uv" tool should be used instead of "pip"
 - The "uv init" has already been run.
+- The "uv venv" command should be used to establish any python virtual environments
+- The "uv add" command should be used to add packages
