@@ -4,14 +4,14 @@ from llm_faceoff.llms.adapter_interface import LLMAdapterInterface
 
 load_dotenv()  # Load environment variables from .env file
 
-class ClaudeAdapter(LLMAdapterInterface):
+class OpenAIAdapter(LLMAdapterInterface):
     def __init__(self):
-        super().__init__(name="Claude")
-        self.api_key = os.getenv('CLAUDE_API_KEY')
+        super().__init__(name="OpenAI")
+        self.api_key = os.getenv('OPENAI_API_KEY')
         if not self.api_key:
-            raise ValueError("CLAUDE_API_KEY environment variable not set")
+            raise ValueError("OPENAI_API_KEY environment variable not set")
 
     def generate_response(self, topic: str, context: str) -> str:
-        # TODO: Implement actual API call to Claude
+        # TODO: Implement actual API call to OpenAI
         # Use self.api_key for authentication
-        return f"[Claude response on '{topic}']"
+        return f"[OpenAI response on '{topic}']"
