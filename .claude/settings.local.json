@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv add:*)",
+      "Bash(mkdir:*)",
+      "Bash(python test_improved_markdown.py:*)",
+      "Bash(python -m pytest tests/test_basic_functionality.py::test_transcript_generator -v)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
