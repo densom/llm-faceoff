@@ -4,4 +4,21 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "anthropic>=0.67.0",
+    "asyncio>=4.0.0",
+    "openai>=1.107.2",
+    "pydantic>=2.11.9",
+    "pydantic-settings>=2.10.1",
+    "pyyaml>=6.0.2",
+    "rich>=14.1.0",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "mypy>=1.18.1",
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.13.0",
+]
